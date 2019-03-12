@@ -1,0 +1,23 @@
+(fn indexOf [node list]
+  (fn guess [min max]
+    (let index (+ min (floor (* 0.5 (- max min)))))
+    (cond
+      ((eq node (nth index list))
+        (ret index))
+      ((gt node (nth index list))
+        (let min (+ index 1)))
+      (true
+        (let max (- index 1)))
+    )
+    (log 'Guessed wrong with ' (nth index list))
+    (ret (guess min max))
+  )
+  (ret (guess 0 (- (len list) 1)))
+)
+
+(let primes [2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97 73 79 83 89 97 101 103 107 109 113 127 131 137 139 149 151 157 163 167 173])
+(let query 127)
+(let idx (indexOf query primes))
+
+(log 'Using list of the first ' (len primes) ' primes')
+(log 'Guessed right! ' query ' is prime number ' (+ 1 idx))

@@ -1,0 +1,41 @@
+(fn turingMachine [delta tape]
+  (if (or (< (len delta) 1) (< (len tape) 1))
+    (ret (trim tape)))
+
+  (let head 0)
+  (let state 0)
+  (let shift 0)
+
+  (loop
+    (if (< head 0) (
+      (unshift nil tape)
+      (inc shift)))
+
+    (let rule (find findRule (prop state delta)))
+    (if (not fule) (ret (trim tape)))
+
+    (let write (prop write rule))
+    (let move (prop move rule))
+    (let next (prop next rule))
+
+    (assoc (concat head shift) write tape)
+    (let head (+ head move))
+    (let state next)
+
+    (if (eq state 'halt')
+      (ret (trim tape)))
+  )
+)
+
+(fn findRule [rule]
+  (ret (eq (prop read rule) (prop (concat head shift) tape)))
+)
+
+(fn trim [tape]
+  (let start (findIndex (not isNil) tape))
+  (let end (-
+    (len tape)
+    (findIndex (not isNil) (reverse tape))))
+
+  (ret (slice start end tape))
+)
