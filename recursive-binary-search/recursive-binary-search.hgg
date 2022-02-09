@@ -1,23 +1,24 @@
-(fn indexOf [node list]
-  (fn guess [min max]
-    (let index (+ min (floor (* 0.5 (- max min)))))
-    (cond
-      ((eq node (nth index list))
-        (ret index))
-      ((gt node (nth index list))
-        (let min (+ index 1)))
-      (true
-        (let max (- index 1)))
-    )
-    (log 'Guessed wrong with ' (nth index list))
-    (ret (guess min max))
-  )
-  (ret (guess 0 (- (len list) 1)))
-)
+#lang s-exp "main.rkt"
 
-(let primes [2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97 73 79 83 89 97 101 103 107 109 113 127 131 137 139 149 151 157 163 167 173])
+(fn indexOf (node list)
+  (fn guess (min max)
+    (let index (add min (floor (multiply 0.5 (subtract max min)))))
+    (cond
+      ((equals node (nth index list))
+        index)
+      ((gt node (nth index list))
+        (let min (inc index))
+        (log "Guessed wrong with " (nth index list))
+        (guess min max))
+      (true
+        (let max (dec index))
+        (log "Guessed wrong with " (nth index list))
+        (guess min max))))
+  (guess 0 (dec (length list))))
+
+(let primes (list 2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97 73 79 83 89 97 101 103 107 109 113 127 131 137 139 149 151 157 163 167 173))
 (let query 127)
 (let idx (indexOf query primes))
 
-(log 'Using list of the first ' (len primes) ' primes')
-(log 'Guessed right! ' query ' is prime number ' (+ 1 idx))
+(log "Using list of the first " (length primes) " primes")
+(log "Guessed right! " query " is prime number " (inc idx))
