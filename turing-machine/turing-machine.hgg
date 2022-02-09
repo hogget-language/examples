@@ -1,41 +1,45 @@
-(fn turingMachine [delta tape]
-  (if (or (< (len delta) 1) (< (len tape) 1))
-    (ret (trim tape)))
+#lang s-exp "main.rkt"
 
-  (let head 0)
-  (let state 0)
-  (let shift 0)
+; fix: let re-bindings -> with set?
+; fix: if
+; prop, assoc
+; concat, slice
 
-  (loop
-    (if (< head 0) (
-      (unshift nil tape)
-      (inc shift)))
+(fn turingMachine (delta tape)
+  (cond
+    ((or (< (length delta) 1) (< (length tape) 1))
+     (trim tape))
 
-    (let rule (find findRule (prop state delta)))
-    (if (not fule) (ret (trim tape)))
+    (true
+     (let head 0)
+     (let state 0)
+     (let shift 0)
 
-    (let write (prop write rule))
-    (let move (prop move rule))
-    (let next (prop next rule))
+     (loop
+      (if (< head 0) (begin
+                       (unshift nil tape)
+                       (inc shift)))
 
-    (assoc (concat head shift) write tape)
-    (let head (+ head move))
-    (let state next)
+      (let rule (find findRule (prop state delta)))
+      (if (not fule) (ret (trim tape)))
 
-    (if (eq state 'halt')
-      (ret (trim tape)))
-  )
-)
+      (let write (prop write rule))
+      (let move (prop move rule))
+      (let next (prop next rule))
 
-(fn findRule [rule]
-  (ret (eq (prop read rule) (prop (concat head shift) tape)))
-)
+      (assoc (concat head shift) write tape)
+      (let head (+ head move))
+      (let state next)
 
-(fn trim [tape]
+      (if (equals state "halt")
+          (trim tape))))))
+
+(fn findRule (rule)
+  (equals (prop read rule) (prop (concat head shift) tape)))
+
+(fn trim (tape)
   (let start (findIndex (not isNil) tape))
-  (let end (-
-    (len tape)
-    (findIndex (not isNil) (reverse tape))))
+  (let end (- (length tape)
+              (findIndex (not isNil) (reverse tape))))
 
-  (ret (slice start end tape))
-)
+  (slice start end tape))
